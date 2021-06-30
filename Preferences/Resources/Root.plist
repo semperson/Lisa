@@ -34,7 +34,7 @@
  			<key>detail</key>
  			<string>LSACustomizationSubPreferencesListController</string>
  			<key>LSASub</key>
- 			<string>customizationSub</string>
+ 			<string>sub/customization</string>
  		</dict>
 		<dict>
  			<key>cell</key>
@@ -44,7 +44,7 @@
  			<key>detail</key>
  			<string>LSAAnimationsSubPreferencesListController</string>
  			<key>LSASub</key>
- 			<string>animationsSub</string>
+ 			<string>sub/animations</string>
  		</dict>
 		 <dict>
  			<key>cell</key>
@@ -54,7 +54,7 @@
  			<key>detail</key>
  			<string>LSAHapticFeedbackSubPreferencesListController</string>
  			<key>LSASub</key>
- 			<string>hapticFeedbackSub</string>
+ 			<string>sub/hapticFeedback</string>
  		</dict>
 
 		<dict>
@@ -110,7 +110,7 @@
  			<key>detail</key>
  			<string>LSAContributorsSubPreferencesListController</string>
  			<key>LSASub</key>
- 			<string>contributorsSub</string>
+ 			<string>sub/contributors</string>
  		</dict>
 
 		<dict>
