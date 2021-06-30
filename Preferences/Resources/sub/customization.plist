@@ -341,6 +341,36 @@
 			<key>segmentCount</key>
 			<real>10</real>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>label</key>
+			<string>Notification style while lisa is active</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>defaults</key>
+			<string>love.litten.lisapreferences</string>
+			<key>key</key>
+			<string>notificationStyle</string>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+			<key>validTitles</key>
+			<array>
+				<string>Default</string>
+				<string>Light</string>
+				<string>Dark</string>
+			</array>
+			<key>alignment</key>
+			<string>3</string>
+		</dict>
 
 	</array>
 	<key>title</key>

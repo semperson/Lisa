@@ -1,17 +1,16 @@
 #import <UIKit/UIKit.h>
-#import <AudioToolbox/AudioServices.h>
+#import "LisaView.h"
 #import <dlfcn.h>
 #import <Cephei/HBPreferences.h>
 
 HBPreferences* preferences = nil;
 BOOL enabled = NO;
 
-UIView* lisaView = nil;
-UIVisualEffectView* blurView = nil;
-UIBlurEffect* blur = nil;
+LisaView* lisaView = nil;
 
 // global
 BOOL isScreenOn = NO;
+int previousNotificationStyle = 0;
 BOOL hasAddedStatusBarObserver = NO;
 int notificationCount = 0;
 BOOL isDNDActive = NO;
@@ -40,7 +39,8 @@ BOOL disableTodaySwipeSwitch = NO;
 BOOL disableCameraSwipeSwitch = NO;
 BOOL blurredBackgroundSwitch = NO;
 BOOL tapToDismissLisaSwitch = YES;
-NSString* backgroundAlphaValue = @"1.0";
+NSString* backgroundAlphaValue = @"1";
+NSString* notificationStyleValue = @"0";
 
 // animations
 BOOL lisaFadeOutAnimationSwitch = YES;
@@ -51,6 +51,14 @@ BOOL hapticFeedbackSwitch = NO;
 NSString* hapticFeedbackStrengthValue = @"0";
 
 @interface CSCoverSheetViewController : UIViewController
+@end
+
+@interface NCNotificationViewControllerView : UIView
+- (void)updateNotificationStyle;
+@end
+
+@interface NCNotificationLongLookView : UIView
+- (void)updateNotificationStyle;
 @end
 
 @interface SBFLockScreenDateView : UIView

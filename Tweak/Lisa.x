@@ -10,7 +10,7 @@ static dispatch_queue_t getBBServerQueue() {
     dispatch_once(&predicate, ^{
         void* handle = dlopen(NULL, RTLD_GLOBAL);
         if (handle) {
-            dispatch_queue_t __weak *pointer = (__weak dispatch_queue_t *) dlsym(handle, "__BBServerQueue");
+            dispatch_queue_t __weak* pointer = (__weak dispatch_queue_t *) dlsym(handle, "__BBServerQueue");
             if (pointer) queue = *pointer;
             dlclose(handle);
         }
@@ -20,7 +20,7 @@ static dispatch_queue_t getBBServerQueue() {
 
 }
 
-static void fakeNotification(NSString *sectionID, NSDate *date, NSString *message, bool banner) {
+static void fakeNotification(NSString* sectionID, NSDate* date, NSString* message, bool banner) {
     
 	BBBulletin* bulletin = [[%c(BBBulletin) alloc] init];
 
@@ -90,24 +90,9 @@ void LSATestBanner() {
 
 	%orig;
 
-	if (!lisaView) {
-		lisaView = [[UIView alloc] initWithFrame:[[self view] bounds]];
-        [lisaView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-		[lisaView setBackgroundColor:[UIColor blackColor]];
-        [lisaView setAlpha:[backgroundAlphaValue doubleValue]];
-		[lisaView setHidden:YES];
-		if (![lisaView isDescendantOfView:[self view]]) [[self view] insertSubview:lisaView atIndex:0];
-	}
-
-	if (!blur && blurredBackgroundSwitch) {
-		blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
-		blurView = [[UIVisualEffectView alloc] initWithEffect:blur];
-		[blurView setFrame:[[self view] bounds]];
-		[blurView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-		[blurView setClipsToBounds:YES];
-        [blurView setHidden:YES];
-		if (![blurView isDescendantOfView:[self view]]) [[self view] insertSubview:blurView atIndex:0];
-	}
+	lisaView = [LisaView new];
+    [lisaView setFrame:[[self view] bounds]];
+    [[self view] insertSubview:lisaView atIndex:0];
 
 }
 
@@ -115,21 +100,7 @@ void LSATestBanner() {
 
     %orig;
 
-    [lisaView setHidden:YES];
-    if (blurredBackgroundSwitch) [blurView setHidden:YES];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaUnhideElements" object:nil];
-
-}
-
-%end
-
-%hook SBIconController // quick fix for the status bar
-
-- (void)viewWillAppear:(BOOL)animated {
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"lisaUnhideElements" object:nil];
-
-	%orig;
+    [lisaView setVisible:NO];
 
 }
 
@@ -165,28 +136,16 @@ void LSATestBanner() {
 
     if (!tapToDismissLisaSwitch || [lisaView isHidden]) return;
     if (lisaFadeOutAnimationSwitch) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaUnhideElements" object:nil];
-        [UIView animateWithDuration:[lisaFadeOutAnimationValue doubleValue] delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            [lisaView setAlpha:0.0];
-            if (blurredBackgroundSwitch) [blurView setAlpha:0.0];
+        [UIView animateWithDuration:[lisaFadeOutAnimationValue doubleValue] delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [lisaView setAlpha:0];
         } completion:^(BOOL finished) {
-            [lisaView setHidden:YES];
-            if (blurredBackgroundSwitch) [blurView setHidden:YES];
+            [lisaView setVisible:NO];
+            [lisaView setAlpha:[backgroundAlphaValue doubleValue]];
         }];
-        if (hapticFeedbackSwitch) {
-            if ([hapticFeedbackStrengthValue intValue] == 0) AudioServicesPlaySystemSound(1519);
-            else if ([hapticFeedbackStrengthValue intValue] == 1) AudioServicesPlaySystemSound(1520);
-            else if ([hapticFeedbackStrengthValue intValue] == 2) AudioServicesPlaySystemSound(1521);
-        }
+        if (hapticFeedbackSwitch) [lisaView playHapticFeedback];
     } else {
-        [lisaView setHidden:YES];
-        if (blurredBackgroundSwitch) [blurView setHidden:YES];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaUnhideElements" object:nil];
-        if (hapticFeedbackSwitch) {
-            if ([hapticFeedbackStrengthValue intValue] == 0) AudioServicesPlaySystemSound(1519);
-            else if ([hapticFeedbackStrengthValue intValue] == 1) AudioServicesPlaySystemSound(1520);
-            else if ([hapticFeedbackStrengthValue intValue] == 2) AudioServicesPlaySystemSound(1521);
-        }
+        [lisaView setVisible:NO];
+        if (hapticFeedbackSwitch) [lisaView playHapticFeedback];
     }
 
 }
@@ -204,74 +163,25 @@ void LSATestBanner() {
 
     if (![[%c(SBLockScreenManager) sharedInstance] isLockScreenVisible]) return;
     if (onlyWhileChargingSwitch && ![[%c(SBUIController) sharedInstance] isOnAC]) return;
+    
     if (onlyWhenDNDIsActiveSwitch && isDNDActive) {
-        if (whenNotificationArrivesSwitch && arg1 == 12) {
-            [lisaView setHidden:NO];
-            [lisaView setAlpha:[backgroundAlphaValue doubleValue]];
-            if (blurredBackgroundSwitch) {
-                [blurView setHidden:NO];
-                [blurView setAlpha:1.0];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaHideElements" object:nil];
-            return;
-        } else if (whenPlayingMusicSwitch && [[%c(SBMediaController) sharedInstance] isPlaying]) {
-            [lisaView setHidden:NO];
-            [lisaView setAlpha:[backgroundAlphaValue doubleValue]];
-            if (blurredBackgroundSwitch) {
-                [blurView setHidden:NO];
-                [blurView setAlpha:1.0];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaHideElements" object:nil];
-            return;
-        } else if (alwaysWhenNotificationsArePresentedSwitch && notificationCount > 0) {
-            [lisaView setHidden:NO];
-            [lisaView setAlpha:[backgroundAlphaValue doubleValue]];
-            if (blurredBackgroundSwitch) {
-                [blurView setHidden:NO];
-                [blurView setAlpha:1.0];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaHideElements" object:nil];
-            return;
-        } else {
-            [lisaView setHidden:YES];
-            if (blurredBackgroundSwitch) [blurView setHidden:YES];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaUnhideElements" object:nil];
-            return;
-        }
+        if (whenNotificationArrivesSwitch && arg1 == 12)
+            [lisaView setVisible:YES];
+        else if (whenPlayingMusicSwitch && [[%c(SBMediaController) sharedInstance] isPlaying])
+            [lisaView setVisible:YES];
+        else if (alwaysWhenNotificationsArePresentedSwitch && notificationCount > 0)
+            [lisaView setVisible:YES];
+        else
+            [lisaView setVisible:NO];
     } else if (!onlyWhenDNDIsActiveSwitch) {
-        if (whenNotificationArrivesSwitch && arg1 == 12) {
-            [lisaView setHidden:NO];
-            [lisaView setAlpha:[backgroundAlphaValue doubleValue]];
-            if (blurredBackgroundSwitch) {
-                [blurView setHidden:NO];
-                [blurView setAlpha:1.0];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaHideElements" object:nil];
-            return;
-        } else if (whenPlayingMusicSwitch && [[%c(SBMediaController) sharedInstance] isPlaying]) {
-            [lisaView setHidden:NO];
-            [lisaView setAlpha:[backgroundAlphaValue doubleValue]];
-            if (blurredBackgroundSwitch) {
-                [blurView setHidden:NO];
-                [blurView setAlpha:1.0];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaHideElements" object:nil];
-            return;
-        } else if (alwaysWhenNotificationsArePresentedSwitch && notificationCount > 0) {
-            [lisaView setHidden:NO];
-            [lisaView setAlpha:[backgroundAlphaValue doubleValue]];
-            if (blurredBackgroundSwitch) {
-                [blurView setHidden:NO];
-                [blurView setAlpha:1.0];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaHideElements" object:nil];
-            return;
-        } else {
-            [lisaView setHidden:YES];
-            if (blurredBackgroundSwitch) [blurView setHidden:YES];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaUnhideElements" object:nil];
-            return;
-        }
+        if (whenNotificationArrivesSwitch && arg1 == 12)
+            [lisaView setVisible:YES];
+        else if (whenPlayingMusicSwitch && [[%c(SBMediaController) sharedInstance] isPlaying])
+            [lisaView setVisible:NO];
+        else if (alwaysWhenNotificationsArePresentedSwitch && notificationCount > 0)
+            [lisaView setVisible:YES];
+        else
+            [lisaView setVisible:NO];
     }
 
 }
@@ -289,6 +199,75 @@ void LSATestBanner() {
 }
 
 %end
+
+%hook NCNotificationMasterList
+
+- (unsigned long long)notificationCount { // get the notification count
+
+    notificationCount = %orig;
+
+    return notificationCount;
+
+}
+
+%end
+
+%hook DNDState
+
+- (BOOL)isActive { // get the dnd state
+
+    isDNDActive = %orig;
+
+    return isDNDActive;
+
+}
+
+%end
+
+%hook NCNotificationViewControllerView
+
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
+
+    id orig = %orig;
+
+    if ([notificationStyleValue intValue] != 0) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNotificationStyle) name:@"lisaUpdateNotificationStyle" object:nil];
+
+    return orig;
+
+}
+
+%new
+- (void)updateNotificationStyle { // set light/dark notification style
+
+    previousNotificationStyle = [self overrideUserInterfaceStyle];
+    if (![lisaView isHidden]) [self setOverrideUserInterfaceStyle:[notificationStyleValue intValue]];
+    else [self setOverrideUserInterfaceStyle:previousNotificationStyle];
+
+}
+
+%end
+
+// %hook NCNotificationLongLookView
+
+// - (id)initWithFrame:(CGRect)frame { // add a notification observer
+
+//     id orig = %orig;
+
+//     if ([notificationStyleValue intValue] != 0) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNotificationStyle) name:@"lisaUpdateNotificationStyle" object:nil];
+
+//     return orig;
+
+// }
+
+// %new
+// - (void)updateNotificationStyle { // set light/dark notification long look style
+
+//     if (![lisaView isHidden]) [self setOverrideUserInterfaceStyle:[notificationStyleValue intValue]];
+//     else [self setOverrideUserInterfaceStyle:previousNotificationStyle];
+
+// }
+
+// %end
 
 %hook UIStatusBar_Modern
 
@@ -699,38 +678,6 @@ void LSATestBanner() {
 
 %end
 
-%end
-
-%group LisaData
-
-%hook NCNotificationMasterList
-
-- (unsigned long long)notificationCount { // get notification count
-
-    notificationCount = %orig;
-
-    return notificationCount;
-
-}
-
-%end
-
-%hook DNDState
-
-- (BOOL)isActive { // get dnd state
-
-    isDNDActive = %orig;
-
-    return isDNDActive;
-
-}
-
-%end
-
-%end
-
-%group TestNotifications
-
 %hook BBServer
 
 - (id)initWithQueue:(id)arg1 {
@@ -791,7 +738,8 @@ void LSATestBanner() {
     [preferences registerBool:&disableCameraSwipeSwitch default:NO forKey:@"disableCameraSwipe"];
     [preferences registerBool:&blurredBackgroundSwitch default:NO forKey:@"blurredBackground"];
     [preferences registerBool:&tapToDismissLisaSwitch default:YES forKey:@"tapToDismissLisa"];
-    [preferences registerObject:&backgroundAlphaValue default:@"1.0" forKey:@"backgroundAlpha"];
+    [preferences registerObject:&backgroundAlphaValue default:@"1" forKey:@"backgroundAlpha"];
+    [preferences registerObject:&notificationStyleValue default:@"0" forKey:@"notificationStyle"];
     
     // animations
     [preferences registerBool:&lisaFadeOutAnimationSwitch default:YES forKey:@"lisaFadeOutAnimation"];
@@ -809,8 +757,6 @@ void LSATestBanner() {
     if (hideAxonSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Axon.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Axon.dylib", RTLD_NOW);
 
     %init(Lisa);
-    if (onlyWhenDNDIsActiveSwitch || alwaysWhenNotificationsArePresentedSwitch) %init(LisaData);
-    %init(TestNotifications);
 
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)LSATestNotifications, (CFStringRef)@"love.litten.lisa/TestNotifications", NULL, (CFNotificationSuspensionBehavior)kNilOptions);
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)LSATestBanner, (CFStringRef)@"love.litten.lisa/TestBanner", NULL, (CFNotificationSuspensionBehavior)kNilOptions);
