@@ -1,5 +1,5 @@
 # Lisa
-Customize your lock screen experience
+Full incoming OLED notifications
 
 ## Installation
 1. Add this repository to your Package Manager: https://repo.litten.love
