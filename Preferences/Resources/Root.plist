@@ -61,7 +61,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Other Options</string>
+			<string>Other options</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -75,7 +75,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>label</key>
-			<string>Reset Preferences</string>
+			<string>Reset preferences</string>
 			<key>action</key>
 			<string>resetPrompt</string>
 		</dict>
@@ -83,7 +83,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>label</key>
-			<string>Test Notifications</string>
+			<string>Test notifications</string>
 			<key>action</key>
 			<string>testNotifications:</string>
 		</dict>
@@ -91,7 +91,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>label</key>
-			<string>Test Banner</string>
+			<string>Test banner</string>
 			<key>action</key>
 			<string>testBanner:</string>
 		</dict>
@@ -117,7 +117,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>You Might Like:</string>
+			<string>You might like:</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -127,7 +127,7 @@
 			<key>subtitle</key>
 			<string>Design your own lockscreen player</string>
 			<key>icon</key>
-			<string>Lobelias.png</string>
+			<string>featured/Lobelias.png</string>
 			<key>url</key>
 			<string>https://repo.litten.love/depictions/lia/</string>
 		</dict>
@@ -139,7 +139,7 @@
 			<key>subtitle</key>
 			<string>Make your wallpaper your song's artwork</string>
 			<key>icon</key>
-			<string>Violet.png</string>
+			<string>featured/Violet.png</string>
 			<key>url</key>
 			<string>https://repo.litten.love/depictions/vio/</string>
 		</dict>
@@ -166,7 +166,7 @@
 			<key>cellClass</key>
 			<string>HBLinkTableCell</string>
 			<key>label</key>
-			<string>Source Code</string>
+			<string>Source code</string>
 			<key>subtitle</key>
 			<string>GitHub 💅🏻</string>
 			<key>url</key>
@@ -176,7 +176,7 @@
 			<key>cellClass</key>
 			<string>HBLinkTableCell</string>
 			<key>label</key>
-			<string>Donate To Litten</string>
+			<string>Donate to Litten</string>
 			<key>subtitle</key>
 			<string>Appreciated 💝</string>
 			<key>url</key>
