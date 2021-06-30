@@ -244,4 +244,16 @@
 
 }
 
+- (void)testNotifications:(id)sender {
+
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)@"love.litten.lisa/TestNotifications", nil, nil, true);
+
+}
+
+- (void)testBanner:(id)sender {
+
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)@"love.litten.lisa/TestBanner", nil, nil, true);
+
+}
+
 @end

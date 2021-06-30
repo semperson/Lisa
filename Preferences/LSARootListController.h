@@ -25,4 +25,6 @@
 - (void)resetPrompt;
 - (void)resetPreferences;
 - (void)respring;
+- (void)testNotifications:(id)sender;
+- (void)testBanner:(id)sender;
 @end
