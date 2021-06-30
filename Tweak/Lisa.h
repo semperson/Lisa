@@ -3,21 +3,21 @@
 #import <dlfcn.h>
 #import <Cephei/HBPreferences.h>
 
-HBPreferences* preferences;
-UIView* lisaView;
-UIVisualEffectView* blurView;
-UIBlurEffect* blur;
+HBPreferences* preferences = nil;
+BOOL enabled = NO;
+
+UIView* lisaView = nil;
+UIVisualEffectView* blurView = nil;
+UIBlurEffect* blur = nil;
 
 BOOL isScreenOn = NO;
 int notificationCount = 0;
 BOOL isDNDActive = NO;
 
-extern BOOL enabled;
-extern BOOL enableCustomizationSection;
-extern BOOL enableAnimationsSection;
-extern BOOL enableHapticFeedbackSection;
+// global
+BOOL hasAddedStatusBarObserver = NO;
 
-// Customization
+// customization
 BOOL onlyWhenDNDIsActiveSwitch = NO;
 BOOL whenNotificationArrivesSwitch = YES;
 BOOL alwaysWhenNotificationsArePresentedSwitch = YES;
@@ -43,11 +43,11 @@ BOOL blurredBackgroundSwitch = NO;
 BOOL tapToDismissLisaSwitch = YES;
 NSString* backgroundAlphaValue = @"1.0";
 
-// Animations
+// animations
 BOOL lisaFadeOutAnimationSwitch = YES;
 NSString* lisaFadeOutAnimationValue = @"0.5";
 
-// Haptic Feedback
+// haptic feedback
 BOOL hapticFeedbackSwitch = NO;
 NSString* hapticFeedbackStrengthValue = @"0";
 
@@ -134,7 +134,6 @@ NSString* hapticFeedbackStrengthValue = @"0";
 - (BOOL)isOnAC;
 @end
 
-// test notifications
 @interface BBAction : NSObject
 + (id)actionWithLaunchBundleID:(id)arg1 callblock:(id)arg2;
 @end

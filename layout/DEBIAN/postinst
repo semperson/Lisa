@@ -1,3 +1,5 @@
+#!/bin/sh
+
 echo ""
 echo "  _                ___       _.--. "
 echo "  \ .|\..----...-'     -._.-'_.-'  "
@@ -7,5 +9,5 @@ echo "   -'"  "\_  ,_.-;_.-\_ ',         "
 echo "      _.-'_./   {_.'   ; /         "
 echo "     {_.-  -'         {_/          "
 echo ""
-echo "Thank You For Installing Lisa 1.4.1 🤗"
+echo "Thank You For Installing Lisa 1.5 🤗"
 echo ""

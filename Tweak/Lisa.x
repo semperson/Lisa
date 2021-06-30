@@ -1,11 +1,5 @@
 #import "Lisa.h"
 
-BOOL enabled;
-BOOL enableCustomizationSection;
-BOOL enableAnimationsSection;
-BOOL enableHapticFeedbackSection;
-
-// test notifications
 static BBServer* bbServer = nil;
 
 static dispatch_queue_t getBBServerQueue() {
@@ -14,7 +8,7 @@ static dispatch_queue_t getBBServerQueue() {
     static dispatch_once_t predicate;
 
     dispatch_once(&predicate, ^{
-    void* handle = dlopen(NULL, RTLD_GLOBAL);
+        void* handle = dlopen(NULL, RTLD_GLOBAL);
         if (handle) {
             dispatch_queue_t __weak *pointer = (__weak dispatch_queue_t *) dlsym(handle, "__BBServerQueue");
             if (pointer) queue = *pointer;
@@ -143,27 +137,9 @@ void LSATestBanner() {
 
 %hook SBMainDisplayPolicyAggregator
 
-- (BOOL)_allowsCapabilityLockScreenTodayViewWithExplanation:(id *)arg1 { // disable today swipe
+- (BOOL)_allowsCapabilityTodayViewWithExplanation:(id *)arg1 { // disable today view swipe
 
     if (disableTodaySwipeSwitch)
-		return NO;
-	else
-		return %orig;
-
-}
-
-- (BOOL)_allowsCapabilityTodayViewWithExplanation:(id *)arg1 { // disable today swipe
-
-    if (disableTodaySwipeSwitch)
-		return NO;
-	else
-		return %orig;
-
-}
-
-- (BOOL)_allowsCapabilityLockScreenCameraSupportedWithExplanation:(id *)arg1 { // disable camera swipe
-
-    if (disableCameraSwipeSwitch)
 		return NO;
 	else
 		return %orig;
@@ -197,7 +173,7 @@ void LSATestBanner() {
             [lisaView setHidden:YES];
             [blurView setHidden:YES];
         }];
-        if (enableHapticFeedbackSection && hapticFeedbackSwitch) {
+        if (hapticFeedbackSwitch) {
             if ([hapticFeedbackStrengthValue intValue] == 0) AudioServicesPlaySystemSound(1519);
             else if ([hapticFeedbackStrengthValue intValue] == 1) AudioServicesPlaySystemSound(1520);
             else if ([hapticFeedbackStrengthValue intValue] == 2) AudioServicesPlaySystemSound(1521);
@@ -206,7 +182,7 @@ void LSATestBanner() {
         [lisaView setHidden:YES];
         [blurView setHidden:YES];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"lisaUnhideElements" object:nil];
-        if (enableHapticFeedbackSection && hapticFeedbackSwitch) {
+        if (hapticFeedbackSwitch) {
             if ([hapticFeedbackStrengthValue intValue] == 0) AudioServicesPlaySystemSound(1519);
             else if ([hapticFeedbackStrengthValue intValue] == 1) AudioServicesPlaySystemSound(1520);
             else if ([hapticFeedbackStrengthValue intValue] == 2) AudioServicesPlaySystemSound(1521);
@@ -292,7 +268,7 @@ void LSATestBanner() {
 
 %hook SBLockScreenManager
 
-- (void)lockUIFromSource:(int)arg1 withOptions:(id)arg2 { // notice when screen turned off
+- (void)lockUIFromSource:(int)arg1 withOptions:(id)arg2 { // note when screen turned off
 
 	%orig;
 
@@ -302,17 +278,15 @@ void LSATestBanner() {
 
 %end
 
-%end
-
-%group LisaVisibility
-
 %hook UIStatusBar_Modern
 
-- (void)setFrame:(CGRect)arg1 { // add notification observer
+- (void)setFrame:(CGRect)arg1 { // add a notification observer
 
-    if (hideStatusBarSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+    if (hideStatusBarSwitch && !hasAddedStatusBarObserver) {
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        hasAddedStatusBarObserver = YES;
     }
 
 	return %orig;
@@ -336,11 +310,12 @@ void LSATestBanner() {
 
 %hook SBUIProudLockIconView
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideFaceIDLockSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -364,11 +339,12 @@ void LSATestBanner() {
 
 %hook SBFLockScreenDateView
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideTimeAndDateSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -392,11 +368,12 @@ void LSATestBanner() {
 
 %hook CSQuickActionsButton
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideQuickActionsSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -420,11 +397,12 @@ void LSATestBanner() {
 
 %hook CSTeachableMomentsContainerView
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideControlCenterIndicatorSwitch || hideUnlockTextSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -450,11 +428,12 @@ void LSATestBanner() {
 
 %hook SBUICallToActionLabel
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideUnlockTextSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -478,11 +457,12 @@ void LSATestBanner() {
 
 %hook CSHomeAffordanceView
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideHomebarSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -506,11 +486,12 @@ void LSATestBanner() {
 
 %hook CSPageControl
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hidePageDotsSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -534,11 +515,12 @@ void LSATestBanner() {
 
 %hook ComplicationsView
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideComplicationsSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -562,11 +544,12 @@ void LSATestBanner() {
 
 %hook KAIBatteryPlatter
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideKaiSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -590,11 +573,12 @@ void LSATestBanner() {
 
 %hook APEPlatter
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideAperioSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -618,11 +602,12 @@ void LSATestBanner() {
 
 %hook LibellumView
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideLibellumSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -646,11 +631,12 @@ void LSATestBanner() {
 
 %hook VezaView
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideVezaSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -674,11 +660,12 @@ void LSATestBanner() {
 
 %hook AXNView
 
-- (id)initWithFrame:(CGRect)frame { // add notification observer
+- (id)initWithFrame:(CGRect)frame { // add a notification observer
 
     if (hideVezaSwitch) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaHideElements" object:nil];
+        [notificationCenter addObserver:self selector:@selector(receiveHideNotification:) name:@"lisaUnhideElements" object:nil];
     }
 
 	return %orig;
@@ -706,7 +693,7 @@ void LSATestBanner() {
 
 %hook NCNotificationMasterList
 
-- (unsigned long long)notificationCount { // get notifications count
+- (unsigned long long)notificationCount { // get notification count
 
     notificationCount = %orig;
 
@@ -765,66 +752,55 @@ void LSATestBanner() {
 %ctor {
 
     preferences = [[HBPreferences alloc] initWithIdentifier:@"love.litten.lisapreferences"];
+    [preferences registerBool:&enabled default:NO forKey:@"Enabled"];
+    if (!enabled) return;
 
-    [preferences registerBool:&enabled default:nil forKey:@"Enabled"];
-    [preferences registerBool:&enableCustomizationSection default:nil forKey:@"EnableCustomizationSection"];
-    [preferences registerBool:&enableAnimationsSection default:nil forKey:@"EnableAnimationsSection"];
-    [preferences registerBool:&enableHapticFeedbackSection default:nil forKey:@"EnableHapticFeedbackSection"];
+    // customization
+    [preferences registerBool:&onlyWhenDNDIsActiveSwitch default:NO forKey:@"onlyWhenDNDIsActive"];
+    [preferences registerBool:&whenNotificationArrivesSwitch default:YES forKey:@"whenNotificationArrives"];
+    [preferences registerBool:&alwaysWhenNotificationsArePresentedSwitch default:YES forKey:@"alwaysWhenNotificationsArePresented"];
+    [preferences registerBool:&whenPlayingMusicSwitch default:YES forKey:@"whenPlayingMusic"];
+    [preferences registerBool:&onlyWhileChargingSwitch default:NO forKey:@"onlyWhileCharging"];
+    [preferences registerBool:&hideStatusBarSwitch default:YES forKey:@"hideStatusBar"];
+    [preferences registerBool:&hideControlCenterIndicatorSwitch default:YES forKey:@"hideControlCenterIndicator"];
+    [preferences registerBool:&hideFaceIDLockSwitch default:YES forKey:@"hideFaceIDLock"];
+    [preferences registerBool:&hideTimeAndDateSwitch default:YES forKey:@"hideTimeAndDate"];
+    [preferences registerBool:&hideQuickActionsSwitch default:YES forKey:@"hideQuickActions"];
+    [preferences registerBool:&hideUnlockTextSwitch default:YES forKey:@"hideUnlockText"];
+    [preferences registerBool:&hideHomebarSwitch default:YES forKey:@"hideHomebar"];
+    [preferences registerBool:&hidePageDotsSwitch default:YES forKey:@"hidePageDots"];
+    [preferences registerBool:&hideComplicationsSwitch default:YES forKey:@"hideComplications"];
+    [preferences registerBool:&hideKaiSwitch default:YES forKey:@"hideKai"];
+    [preferences registerBool:&hideAperioSwitch default:YES forKey:@"hideAperio"];
+    [preferences registerBool:&hideLibellumSwitch default:YES forKey:@"hideLibellum"];
+    [preferences registerBool:&hideVezaSwitch default:YES forKey:@"hideVeza"];
+    [preferences registerBool:&hideAxonSwitch default:YES forKey:@"hideAxon"];
+    [preferences registerBool:&disableTodaySwipeSwitch default:NO forKey:@"disableTodaySwipe"];
+    [preferences registerBool:&disableCameraSwipeSwitch default:NO forKey:@"disableCameraSwipe"];
+    [preferences registerBool:&blurredBackgroundSwitch default:NO forKey:@"blurredBackground"];
+    [preferences registerBool:&tapToDismissLisaSwitch default:YES forKey:@"tapToDismissLisa"];
+    [preferences registerObject:&backgroundAlphaValue default:@"1.0" forKey:@"backgroundAlpha"];
+    
+    // animations
+    [preferences registerBool:&lisaFadeOutAnimationSwitch default:YES forKey:@"lisaFadeOutAnimation"];
+    [preferences registerObject:&lisaFadeOutAnimationValue default:@"0.5" forKey:@"lisaFadeOutAnimation"];
 
-    // Customization
-    if (enableCustomizationSection) {
-        [preferences registerBool:&onlyWhenDNDIsActiveSwitch default:NO forKey:@"onlyWhenDNDIsActive"];
-        [preferences registerBool:&whenNotificationArrivesSwitch default:YES forKey:@"whenNotificationArrives"];
-        [preferences registerBool:&alwaysWhenNotificationsArePresentedSwitch default:YES forKey:@"alwaysWhenNotificationsArePresented"];
-        [preferences registerBool:&whenPlayingMusicSwitch default:YES forKey:@"whenPlayingMusic"];
-        [preferences registerBool:&onlyWhileChargingSwitch default:NO forKey:@"onlyWhileCharging"];
-        [preferences registerBool:&hideStatusBarSwitch default:YES forKey:@"hideStatusBar"];
-        [preferences registerBool:&hideControlCenterIndicatorSwitch default:YES forKey:@"hideControlCenterIndicator"];
-        [preferences registerBool:&hideFaceIDLockSwitch default:YES forKey:@"hideFaceIDLock"];
-        [preferences registerBool:&hideTimeAndDateSwitch default:YES forKey:@"hideTimeAndDate"];
-        [preferences registerBool:&hideQuickActionsSwitch default:YES forKey:@"hideQuickActions"];
-        [preferences registerBool:&hideUnlockTextSwitch default:YES forKey:@"hideUnlockText"];
-        [preferences registerBool:&hideHomebarSwitch default:YES forKey:@"hideHomebar"];
-        [preferences registerBool:&hidePageDotsSwitch default:YES forKey:@"hidePageDots"];
-        [preferences registerBool:&hideComplicationsSwitch default:YES forKey:@"hideComplications"];
-        [preferences registerBool:&hideKaiSwitch default:YES forKey:@"hideKai"];
-        [preferences registerBool:&hideAperioSwitch default:YES forKey:@"hideAperio"];
-        [preferences registerBool:&hideLibellumSwitch default:YES forKey:@"hideLibellum"];
-        [preferences registerBool:&hideVezaSwitch default:YES forKey:@"hideVeza"];
-        [preferences registerBool:&hideAxonSwitch default:YES forKey:@"hideAxon"];
-        [preferences registerBool:&disableTodaySwipeSwitch default:NO forKey:@"disableTodaySwipe"];
-        [preferences registerBool:&disableCameraSwipeSwitch default:NO forKey:@"disableCameraSwipe"];
-        [preferences registerBool:&blurredBackgroundSwitch default:NO forKey:@"blurredBackground"];
-        [preferences registerBool:&tapToDismissLisaSwitch default:YES forKey:@"tapToDismissLisa"];
-        [preferences registerObject:&backgroundAlphaValue default:@"1.0" forKey:@"backgroundAlpha"];
-    }
+    // haptic feedback
+    [preferences registerBool:&hapticFeedbackSwitch default:NO forKey:@"hapticFeedback"];
+    [preferences registerObject:&hapticFeedbackStrengthValue default:@"0" forKey:@"hapticFeedbackStrength"];
 
-    // Animations
-    if (enableAnimationsSection) {
-        [preferences registerBool:&lisaFadeOutAnimationSwitch default:YES forKey:@"lisaFadeOutAnimation"];
-        [preferences registerObject:&lisaFadeOutAnimationValue default:@"0.5" forKey:@"lisaFadeOutAnimation"];
-    }
+    if (hideComplicationsSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Complications.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Complications.dylib", RTLD_NOW);
+    if (hideKaiSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Kai.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Kai.dylib", RTLD_NOW);
+    if (hideAperioSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Aperio.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Aperio.dylib", RTLD_NOW);
+    if (hideLibellumSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Libellum.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Libellum.dylib", RTLD_NOW);
+    if (hideVezaSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Veza.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Veza.dylib", RTLD_NOW);
+    if (hideAxonSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Axon.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Axon.dylib", RTLD_NOW);
 
-    // Haptic Feedback
-    if (enableHapticFeedbackSection) {
-        [preferences registerBool:&hapticFeedbackSwitch default:NO forKey:@"hapticFeedback"];
-        [preferences registerObject:&hapticFeedbackStrengthValue default:@"0" forKey:@"hapticFeedbackStrength"];
-    }
+    %init(Lisa);
+    if (onlyWhenDNDIsActiveSwitch || alwaysWhenNotificationsArePresentedSwitch) %init(LisaData);
+    %init(TestNotifications);
 
-    if (enabled) {
-        %init(Lisa);
-        if (hideComplicationsSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Complications.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Complications.dylib", RTLD_NOW);
-        if (hideKaiSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Kai.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Kai.dylib", RTLD_NOW);
-        if (hideAperioSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Aperio.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Aperio.dylib", RTLD_NOW);
-        if (hideLibellumSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Libellum.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Libellum.dylib", RTLD_NOW);
-        if (hideVezaSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Veza.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Veza.dylib", RTLD_NOW);
-        if (hideAxonSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Axon.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Axon.dylib", RTLD_NOW);
-        %init(LisaVisibility);
-        if (onlyWhenDNDIsActiveSwitch || alwaysWhenNotificationsArePresentedSwitch) %init(LisaData);
-        %init(TestNotifications);
-        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)LSATestNotifications, (CFStringRef)@"love.litten.lisa/TestNotifications", NULL, (CFNotificationSuspensionBehavior)kNilOptions);
-        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)LSATestBanner, (CFStringRef)@"love.litten.lisa/TestBanner", NULL, (CFNotificationSuspensionBehavior)kNilOptions);
-        return;
-    }
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)LSATestNotifications, (CFStringRef)@"love.litten.lisa/TestNotifications", NULL, (CFNotificationSuspensionBehavior)kNilOptions);
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)LSATestBanner, (CFStringRef)@"love.litten.lisa/TestBanner", NULL, (CFNotificationSuspensionBehavior)kNilOptions);
 
 }
