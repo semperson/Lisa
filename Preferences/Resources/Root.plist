@@ -32,7 +32,7 @@
  			<key>label</key>
  			<string>Customization</string>
  			<key>detail</key>
- 			<string>LSACustomizationSubPrefsListController</string>
+ 			<string>LSACustomizationSubPreferencesListController</string>
  			<key>LSASub</key>
  			<string>customizationSub</string>
  		</dict>
@@ -42,7 +42,7 @@
  			<key>label</key>
  			<string>Animations</string>
  			<key>detail</key>
- 			<string>LSAAnimationsSubPrefsListController</string>
+ 			<string>LSAAnimationsSubPreferencesListController</string>
  			<key>LSASub</key>
  			<string>animationsSub</string>
  		</dict>
@@ -52,7 +52,7 @@
  			<key>label</key>
  			<string>Haptic Feedback</string>
  			<key>detail</key>
- 			<string>LSAHapticFeedbackSubPrefsListController</string>
+ 			<string>LSAHapticFeedbackSubPreferencesListController</string>
  			<key>LSASub</key>
  			<string>hapticFeedbackSub</string>
  		</dict>
@@ -108,7 +108,7 @@
  			<key>label</key>
  			<string>Contributors</string>
  			<key>detail</key>
- 			<string>LSAContributorsSubPrefsListController</string>
+ 			<string>LSAContributorsSubPreferencesListController</string>
  			<key>LSASub</key>
  			<string>contributorsSub</string>
  		</dict>

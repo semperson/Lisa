@@ -22,8 +22,6 @@
 			<string>onlyWhenDNDIsActive</string>
 			<key>label</key>
 			<string>Only While DND Is Active</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -36,8 +34,6 @@
 			<string>whenNotificationArrives</string>
 			<key>label</key>
 			<string>When Notification Arrives</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -50,8 +46,6 @@
 			<string>alwaysWhenNotificationsArePresented</string>
 			<key>label</key>
 			<string>Always When Notifications Are Presented</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -64,8 +58,6 @@
 			<string>whenPlayingMusic</string>
 			<key>label</key>
 			<string>When Playing Music</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -78,8 +70,6 @@
 			<string>onlyWhileCharging</string>
 			<key>label</key>
 			<string>Only While Charging</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -99,8 +89,6 @@
 			<string>hideStatusBar</string>
 			<key>label</key>
 			<string>Hide Status Bar</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -113,8 +101,6 @@
 			<string>hideControlCenterIndicator</string>
 			<key>label</key>
 			<string>Hide Control Center Indicator</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -127,8 +113,6 @@
 			<string>hideFaceIDLock</string>
 			<key>label</key>
 			<string>Hide FaceID Lock</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -141,8 +125,6 @@
 			<string>hideTimeAndDate</string>
 			<key>label</key>
 			<string>Hide Time And Date</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -155,8 +137,6 @@
 			<string>hideQuickActions</string>
 			<key>label</key>
 			<string>Hide Quick Actions</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -169,8 +149,6 @@
 			<string>hideUnlockText</string>
 			<key>label</key>
 			<string>Hide Unlock Text</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -183,8 +161,6 @@
 			<string>hideHomebar</string>
 			<key>label</key>
 			<string>Hide Homebar</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -197,8 +173,6 @@
 			<string>hidePageDots</string>
 			<key>label</key>
 			<string>Hide Page Dots</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -218,8 +192,6 @@
 			<string>hideComplications</string>
 			<key>label</key>
 			<string>Hide Complications</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -232,8 +204,6 @@
 			<string>hideKai</string>
 			<key>label</key>
 			<string>Hide Kai</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -246,8 +216,6 @@
 			<string>hideAperio</string>
 			<key>label</key>
 			<string>Hide Aperio</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -260,8 +228,6 @@
 			<string>hideLibellum</string>
 			<key>label</key>
 			<string>Hide Libellum</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -274,8 +240,6 @@
 			<string>hideVeza</string>
 			<key>label</key>
 			<string>Hide Veza</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -288,8 +252,6 @@
 			<string>hideAxon</string>
 			<key>label</key>
 			<string>Hide Axon</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -309,8 +271,6 @@
 			<string>disableTodaySwipe</string>
 			<key>label</key>
 			<string>Disable Today Swipe</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -323,8 +283,6 @@
 			<string>disableCameraSwipe</string>
 			<key>label</key>
 			<string>Disable Camera Swipe</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -344,8 +302,6 @@
 			<string>blurredBackground</string>
 			<key>label</key>
 			<string>Enable Blurred Background</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -358,8 +314,6 @@
 			<string>tapToDismissLisa</string>
 			<key>label</key>
 			<string>Tap To Dismiss Lisa</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -386,8 +340,6 @@
 			<true/>
 			<key>segmentCount</key>
 			<real>10</real>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 
 	</array>

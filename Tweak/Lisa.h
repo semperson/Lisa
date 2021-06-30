@@ -10,12 +10,11 @@ UIView* lisaView = nil;
 UIVisualEffectView* blurView = nil;
 UIBlurEffect* blur = nil;
 
+// global
 BOOL isScreenOn = NO;
+BOOL hasAddedStatusBarObserver = NO;
 int notificationCount = 0;
 BOOL isDNDActive = NO;
-
-// global
-BOOL hasAddedStatusBarObserver = NO;
 
 // customization
 BOOL onlyWhenDNDIsActiveSwitch = NO;

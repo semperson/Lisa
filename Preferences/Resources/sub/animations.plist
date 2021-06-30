@@ -9,47 +9,45 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Haptic Feedback</string>
+			<string>Lisa Fade Out Animation</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
-			<false/>
+			<true/>
 			<key>defaults</key>
 			<string>love.litten.lisapreferences</string>
 			<key>key</key>
-			<string>hapticFeedback</string>
+			<string>lisaFadeOutAnimation</string>
 			<key>label</key>
 			<string>Enable</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSegmentCell</string>
+			<string>PSStaticTextCell</string>
+			<key>label</key>
+			<string>Animation Speed In Seconds</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
 			<key>default</key>
-			<integer>0</integer>
+			<real>0.5</real>
 			<key>defaults</key>
 			<string>love.litten.lisapreferences</string>
 			<key>key</key>
-			<string>hapticFeedbackStrength</string>
-			<key>validValues</key>
-			<array>
-				<integer>0</integer>
-				<integer>1</integer>
-				<integer>2</integer>
-			</array>
-			<key>validTitles</key>
-			<array>
-				<string>Light</string>
-				<string>Medium</string>
-				<string>Strong</string>
-			</array>
-			<key>alignment</key>
-			<string>3</string>
-			<key>PostNotification</key>
-			<string>love.litten.lisapreferences/ReloadPrefs</string>
+			<string>lisaFadeOutAnimation</string>
+			<key>min</key>
+			<real>0.0</real>
+			<key>max</key>
+			<real>1.0</real>
+			<key>showValue</key>
+			<true/>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<real>10</real>
 		</dict>
 
 	</array>
