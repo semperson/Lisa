@@ -57,10 +57,6 @@ NSString* hapticFeedbackStrengthValue = @"0";
 - (void)updateNotificationStyle;
 @end
 
-@interface NCNotificationLongLookView : UIView
-- (void)updateNotificationStyle;
-@end
-
 @interface SBFLockScreenDateView : UIView
 - (void)receiveHideNotification:(NSNotification *)notification;
 @end
