@@ -230,44 +230,29 @@ void LSATestBanner() {
 
     id orig = %orig;
 
-    if ([notificationStyleValue intValue] != 0) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNotificationStyle) name:@"lisaUpdateNotificationStyle" object:nil];
+    if ([notificationStyleValue intValue] != 0) {
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self selector:@selector(updateNotificationStyle:) name:@"lisaUpdateNotificationStyleActive" object:nil];
+        [notificationCenter addObserver:self selector:@selector(updateNotificationStyle:) name:@"lisaUpdateNotificationStyleInactive" object:nil];
+    }
 
     return orig;
 
 }
 
 %new
-- (void)updateNotificationStyle { // set light/dark notification style
+- (void)updateNotificationStyle:(NSNotification *)notification { // set light/dark notification style
 
-    previousNotificationStyle = [self overrideUserInterfaceStyle];
-    if (![lisaView isHidden]) [self setOverrideUserInterfaceStyle:[notificationStyleValue intValue]];
-    else [self setOverrideUserInterfaceStyle:previousNotificationStyle];
+    if ([notification.name isEqual:@"lisaUpdateNotificationStyleActive"]) {
+        previousNotificationStyle = [self overrideUserInterfaceStyle];
+        [self setOverrideUserInterfaceStyle:[notificationStyleValue intValue]];
+    } else if ([notification.name isEqual:@"lisaUpdateNotificationStyleInactive"]) {
+        [self setOverrideUserInterfaceStyle:previousNotificationStyle];
+    }
 
 }
 
 %end
-
-// %hook NCNotificationLongLookView
-
-// - (id)initWithFrame:(CGRect)frame { // add a notification observer
-
-//     id orig = %orig;
-
-//     if ([notificationStyleValue intValue] != 0) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNotificationStyle) name:@"lisaUpdateNotificationStyle" object:nil];
-
-//     return orig;
-
-// }
-
-// %new
-// - (void)updateNotificationStyle { // set light/dark notification long look style
-
-//     if (![lisaView isHidden]) [self setOverrideUserInterfaceStyle:[notificationStyleValue intValue]];
-//     else [self setOverrideUserInterfaceStyle:previousNotificationStyle];
-
-// }
-
-// %end
 
 %hook UIStatusBar_Modern
 
@@ -747,7 +732,7 @@ void LSATestBanner() {
 
     // haptic feedback
     [preferences registerBool:&hapticFeedbackSwitch default:NO forKey:@"hapticFeedback"];
-    [preferences registerObject:&hapticFeedbackStrengthValue default:@"0" forKey:@"hapticFeedbackStrength"];
+    if (hapticFeedbackSwitch) [preferences registerObject:&hapticFeedbackStrengthValue default:@"0" forKey:@"hapticFeedbackStrength"];
 
     if (hideComplicationsSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Complications.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Complications.dylib", RTLD_NOW);
     if (hideKaiSwitch && [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Kai.dylib"]) dlopen("/Library/MobileSubstrate/DynamicLibraries/Kai.dylib", RTLD_NOW);

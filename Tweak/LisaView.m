@@ -37,17 +37,18 @@
     if (visible) {
         [self setHidden:NO];
         [notificationCenter postNotificationName:@"lisaHideElements" object:nil];
+        [notificationCenter postNotificationName:@"lisaUpdateNotificationStyleActive" object:nil];
     } else {
         [self setHidden:YES];
         [notificationCenter postNotificationName:@"lisaUnhideElements" object:nil];
+        [notificationCenter postNotificationName:@"lisaUpdateNotificationStyleInactive" object:nil];
     }
-    [notificationCenter postNotificationName:@"lisaHideElements" object:nil];
 
 }
 
 - (void)playHapticFeedback {
 
-    int hapticFeedbackStrengthValue = [[[self preferences] objectForKey:@"backgroundAlpha"] intValue];
+    int hapticFeedbackStrengthValue = [[[self preferences] objectForKey:@"hapticFeedbackStrength"] intValue];
 
     if (hapticFeedbackStrengthValue == 0) AudioServicesPlaySystemSound(1519);
     else if (hapticFeedbackStrengthValue == 1) AudioServicesPlaySystemSound(1520);
