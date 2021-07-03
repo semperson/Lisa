@@ -240,6 +240,14 @@ void LSATestBanner() {
 
 }
 
+- (void)didMoveToWindow {
+
+    %orig;
+
+    if ([notificationStyleValue intValue] != 0 && ![lisaView isHidden]) [self setOverrideUserInterfaceStyle:[notificationStyleValue intValue]];
+
+}
+
 %new
 - (void)updateNotificationStyle:(NSNotification *)notification { // set light/dark notification style
 
