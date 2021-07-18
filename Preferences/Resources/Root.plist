@@ -129,7 +129,7 @@
 			<key>icon</key>
 			<string>featured/Lobelias.png</string>
 			<key>url</key>
-			<string>https://repo.litten.love/depictions/lia/</string>
+			<string>https://repo.litten.love/depictions/Lobelias/</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -141,7 +141,7 @@
 			<key>icon</key>
 			<string>featured/Violet.png</string>
 			<key>url</key>
-			<string>https://repo.litten.love/depictions/vio/</string>
+			<string>https://repo.litten.love/depictions/Violet/</string>
 		</dict>
 
 		<dict>
