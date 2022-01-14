@@ -1,4 +1,4 @@
-# Lisa
+# Lisa 💅🏻
 Full incoming OLED notifications
 
 ## Installation
